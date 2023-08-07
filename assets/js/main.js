@@ -5,19 +5,28 @@ async function getParolaRandom() {
   try {
     const response = await fetch(API_URL);
     const data = await response.json();
-    return data.response.split(' ');
+    return data.response;
   } catch (error) {
     console.error('Errore durante la chiamata API:', error.message);
-    return [];
+    return '';
   }
 }
 
 async function generaParolaStampa() {
-  const ParolaRandom = await getParolaRandom();
+  const paroleAccumulate = [];
+
+  for (let i = 0; i < N; ) {
+    const parola = await getParolaRandom();
+    
+    if (parola.length >= 3) {
+      paroleAccumulate.push(parola);
+      i++;
+    }
+  }
+
+  const frase = paroleAccumulate.join(' ');
   
-  if (ParolaRandom.length > 0) {
-    const parolaScelta = ParolaRandom.slice(0, N);
-    const frase = parolaScelta.join(' ');
+  if (frase.length > 0) {
     console.log('Frase generata:', frase);
   } else {
     console.log('Impossibile ottenere parole casuali.');
